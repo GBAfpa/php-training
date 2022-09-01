@@ -189,7 +189,17 @@ $prices = [3, 2, 2, 5, 8];
             <h2 class="exercice-ttl">Question 10</h2>
             <p class="exercice-txt">Afficher le nom et le prix du fruit le moins cher</p>
             <div class="exercice-sandbox">
-                
+                <?php
+
+                    foreach($store as $fruit => $price) {
+                        if (!isset($minPrice) || $price < $minPrice) {
+                            $minPrice = $price;
+                            $bestPrice = $fruit;
+                        }
+                    }
+
+                    echo "$bestPrice : $minPrice";
+                ?>
             </div>
         </section>
 
@@ -198,7 +208,29 @@ $prices = [3, 2, 2, 5, 8];
             <h2 class="exercice-ttl">Question 11</h2>
             <p class="exercice-txt">Afficher les noms et le prix des fruits les plus chers</p>
             <div class="exercice-sandbox">
-                
+                <?php
+
+                foreach($store as $fruit => $price) {
+                    if (!isset($maxPrice) || $price > $maxPrice) {
+                        $maxPrice = $price;
+                        $bestPrice = [$fruit];
+                    }
+                    else if ($price === $maxPrice) {
+                        $bestPrice[] = $fruit;
+                    }
+                }
+                echo implode(", ", $bestPrice)." : $maxPrice";
+
+                $maxPrice = max($store);
+                $bestPrice = [];
+                foreach($store as $fruit => $price) {
+                    if ($price === $maxPrice) {
+                        $bestPrice[] = $fruit;
+                    }
+                }
+
+                echo implode(", ", $bestPrice)." : $maxPrice";
+                ?>
             </div>
         </section>
     </div>
