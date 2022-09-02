@@ -221,7 +221,28 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 6</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre 2 tableaux et retourne un tableau représentant l'intersection des 2</p>
             <div class="exercice-sandbox">
-                
+                <?php
+
+                /**
+                 * Returns the intersection of 2 arrays
+                 *
+                 * @param array $array
+                 * @param array $arrayA
+                 * @return array
+                 */
+                function getArrayIntersection(array $array, array $arrayA):array {
+                    // return array_intersect($array, $arrayA);
+                    // $a = [];
+                    // foreach ($array as $key => $value) {
+                    //     if (in_array($value, $arrayA)) $a[$key] = $value;
+                    // }
+                    // return $a;
+                    return array_filter($array, fn($v) => in_array($v, $arrayA));
+                }
+
+                var_dump(getArrayIntersection($arrayA, $arrayB));
+
+                ?>
             </div>
         </section>
                     
@@ -230,7 +251,34 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 7</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre 2 tableaux et retourne un tableau des valeurs du premier tableau qui ne sont pas dans le second</p>
             <div class="exercice-sandbox">
+                <?php
 
+                /**
+                 * Returns the values from the first array that are not in the second one. 
+                 *
+                 * @param array $a
+                 * @param array $b
+                 * @param bool $unique  Removes the duplicates from output if true. 
+                 * @return array
+                 */
+                function getArrayDifference(array $a, array $b, bool $unique = false):array {
+                    // return array_diff($a, $b);
+                    
+                    $output = [];
+                    foreach ($a as $key => $value) {
+                        if (!in_array($value, $b)) $output[$key] = $value;
+                    }
+
+                    if ($unique) return cleanArrayFromDuplicate($output);
+
+                    return $output;
+
+                    // return array_filter($a, fn($v) => !in_array($v, $b));
+                }
+
+                var_dump(getArrayDifference($arrayA, $arrayB));
+
+                ?>
             </div>
         </section>
 
@@ -240,7 +288,10 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 8</h2>
             <p class="exercice-txt">Réécrire la fonction précédente pour lui ajouter un paramètre booléen facultatif. Si celui-ci est à true, le tableau retourné sera sans doublons</p>
             <div class="exercice-sandbox">
+                <?php
 
+                var_dump(getArrayDifference($arrayA, $arrayB, true));
+                ?>
             </div>
         </section>
 
@@ -250,7 +301,36 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 9</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre un tableau et un entier et retourne les n premiers éléments du tableau.</p>
             <div class="exercice-sandbox">
-                
+                <?php
+
+                /**
+                 * Returns N values from the array.
+                 *
+                 * @param array $a      The list of values
+                 * @param integer $n    The number of values that we want
+                 * @return array
+                 */
+                function getNValuesFromArray(array $a, int $n):array {
+                    // return array_slice($a, 0, $n);
+
+                    // $b = [];
+                    // foreach($a as $key => $value) {
+                    //     if (sizeof($b) < $n) $b[$key] = $value;
+                    //     else break;
+                    // }
+                    // return $b;
+
+                    $b = [];
+                    while (sizeof($b) < $n) {
+                        if (sizeof($a) === 0) break;
+                        $b[] = array_shift($a);
+                    }
+                    return $b;
+                }
+
+                var_dump(getNValuesFromArray($arrayA, 6));
+
+                ?>
             </div>
         </section>
     </div>
