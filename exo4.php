@@ -36,7 +36,31 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 1</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre un tableau et retourne la chaîne de caractère HTML permettant d'afficher les valeurs du tableau sous la forme d'une liste.</p>
             <div class="exercice-sandbox">
+            <?php
 
+            function getList($array) {
+                $list = "";
+                foreach($array as $index => $value) {
+                    $list .= "<li>$index: $value</li>";
+                }
+                return "<ul>$list</ul>";
+            }
+
+            // echo getList($array);
+
+            /**
+             * Gives the HTML list from the given array. 
+             *
+             * @param array $array
+             * @return string
+             */
+            function getHtmlFromArray(array $array) :string {
+                $valueToLi = fn($v) => "<li>$v</li>";
+                return "<ul>".implode("", array_map($valueToLi, $array))."</ul>";
+            }
+
+            echo getHtmlFromArray($arrayA);
+            ?>
             </div>
         </section>
 
@@ -45,7 +69,41 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 2</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre un tableau d'entiers et retourne uniquement les valeurs paires. Afficher les valeurs du tableau sous la forme d'une liste HTML.</p>
             <div class="exercice-sandbox">
+            <?php
 
+                function getNumberPair(array $array):string {
+                    $list = "<ul>";
+                    foreach($array as $number) {
+                        if ($number%2 === 0) {
+                            $list .= "<li>".$number."</li>";
+                        }
+                    }
+                    $list .= "</ul>";
+                    return $list;
+                }
+
+                // echo getNumberPair($array);
+
+                /**
+                 * Filters the even numbers of the given array.
+                 *
+                 * @param array $array The array to filter
+                 * @return array
+                 */
+                function getEvenNumbersFromArray(array $array):array {
+                    // $a = [];
+                    // foreach($array as $number) {
+                    //     if ($number%2 === 0) {
+                    //         $a[] = $number;
+                    //     }
+                    // }
+                    // return $a;
+                    return array_filter($array, fn($v) => $v%2 === 0);
+                }
+
+                $even = getEvenNumbersFromArray($array);
+                echo getHtmlFromArray($even);
+            ?>
             </div>
         </section>
 
@@ -54,7 +112,26 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 3</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre un tableau d'entiers et retourne uniquement les entiers d'index pair</p>
             <div class="exercice-sandbox">
+                <?php
+                    /**
+                     * Get values having even index from the array.
+                     *
+                     * @param array $a
+                     * @return array
+                     */
+                    function getEvenIndex(array $a):array {
+                        // $b = [];
+                        // foreach($a as $index => $number) {
+                        //     if ($index%2 === 0) {
+                        //         $b[] = $number;
+                        //     }
+                        // }
+                        // return $b;
+                        return array_filter($a, fn($k) => $k%2 === 0, ARRAY_FILTER_USE_KEY);
+                    }
 
+                    echo getHtmlFromArray(getEvenIndex($array));
+                ?>
             </div>
         </section>
 
@@ -63,7 +140,27 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 4</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre un tableau d'entiers. La fonction doit retourner les valeurs du tableau mulipliées par 2.</p>
             <div class="exercice-sandbox">
+                <?php
+                
+                /**
+                 * Filters numeric values of the given array and multiplies them by 2.
+                 *
+                 * @param array $array
+                 * @return array
+                 */
+                function getValuesMultiplyBy2(array $array):array {
+                    // $newArray = [];
+                    // foreach($array as $value) {
+                    //     if (is_numeric($value)) $newArray[] = $value * 2;
+                    // }
+                    // return $newArray;
 
+                    return array_map(fn($v) => $v*2, array_filter($array, "is_numeric"));
+                }
+
+                var_dump(getValuesMultiplyBy2($arrayA));
+
+                ?>
             </div>
         </section>
 
@@ -72,7 +169,21 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 4 bis</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre un tableau d'entiers et un entier. La fonction doit retourner les valeurs du tableau divisées par le second paramètre</p>
             <div class="exercice-sandbox">
-                
+                <?php
+
+                /**
+                 * Filters numeric values of the given array divided by the second parameter.
+                 *
+                 * @param array $array  The list of values to be divided 
+                 * @param integer $div  The divider
+                 * @return array
+                 */
+                function divideValuesBy(array $array, int $div):array {
+                    return array_map(fn($v) => $v/$div, array_filter($array, "is_numeric"));
+                }
+
+                var_dump(divideValuesBy($arrayB, 8));
+                ?>
             </div>
         </section>
 
@@ -81,6 +192,26 @@ $arrayB = [85, "toi", 95, "la", 65, 94, 85, "avec", 37, "chat"];
             <h2 class="exercice-ttl">Question 5</h2>
             <p class="exercice-txt">Déclarer une fonction qui prend en paramètre un tableau d'entiers ou de chaînes de caractères et retourne le tableau sans doublons</p>
             <div class="exercice-sandbox">
+                <?php
+                
+                /**
+                 * Removes duplicate values of the array
+                 *
+                 * @param array $array
+                 * @return array
+                 */
+                function cleanArrayFromDuplicate(array $array):array {
+                    // return array_unique($array);
+                    $output = [];
+                    foreach($array as $key => $value) {
+                        if (!in_array($value, $output)) $output[$key] = $value;
+                    }
+                    return $output;
+                }
+
+                var_dump(cleanArrayFromDuplicate($arrayA));
+
+                ?>
                 
             </div>
         </section>
