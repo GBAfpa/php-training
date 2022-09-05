@@ -146,7 +146,22 @@ try {
             <p class="exercice-txt">L'image et le titre de la série sont des liens menant à cette page avec en paramètre "serie", l'identifiant de la série</p>
             <p class="exercice-txt">Afficher une seule série par ligne sur les plus petits écrans, 2 séries par ligne sur les écrans intermédiaires et 4 séries par ligne sur un écran d'ordinateur.</p>
             <div class="exercice-sandbox">
+                <ul>
+                <?php
 
+                foreach ($series as $serie) {
+                    echo "<li>";
+                    echo "<a href=\"?serie=".$serie["id"]."\"><img src=\"".$serie["image"]."\"></a>";
+                    echo "<h2><a href=\"?serie=".$serie["id"]."\">".$serie["name"]."</a></h2>";
+                    echo "<h3>Créée par :</h3>";
+                    echo getHtmlFromArray($serie["createdBy"]);
+                    echo "<h3>Acteurs :</h3>";
+                    echo getHtmlFromArray($serie["actors"]);
+                    echo "</li>";
+                }
+                
+                ?>
+                </ul>
             </div>
         </section>
 
