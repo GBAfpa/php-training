@@ -1,3 +1,18 @@
+<?php
+
+/**
+ * Gives the HTML list from the given array. 
+ *
+ * @param array $array
+ * @return string
+ */
+function getHtmlFromArray(array $array) :string {
+    $valueToLi = fn($v) => "<li>$v</li>";
+    return "<ul>".implode("", array_map($valueToLi, $array))."</ul>";
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,9 +59,23 @@ try {
         <!-- QUESTION 1 -->
         <section class="exercice">
             <h2 class="exercice-ttl">Question 1</h2>
-            <p class="exercice-txt">Récupérer dans un tableau puis affichez l'ensemble des plateformes de diffusion des séries. Afficher les par ordre alphabétique.</p>
+            <p class="exercice-txt">Récupérer dans un tableau puis afficher l'ensemble des plateformes de diffusion des séries. Afficher les par ordre alphabétique.</p>
             <div class="exercice-sandbox">
-                
+                <?php
+                    $platforms = [];
+                    foreach ($series as $serie) {
+                        // if (!in_array($serie["availableOn"], $platforms)) {
+                            $platforms[] = $serie["availableOn"];
+                        // }
+                    }
+
+                    // $platforms = array_map(fn($s) => $s["availableOn"], $series);
+
+                    $platforms = array_unique($platforms);
+                    sort($platforms);
+
+                    echo getHtmlFromArray($platforms);
+                ?>
             </div>
         </section>
 
@@ -56,7 +85,57 @@ try {
             <h2 class="exercice-ttl">Question 2</h2>
             <p class="exercice-txt">Récupérer dans un tableau puis affichez l'ensemble des styles de séries. Afficher les par ordre alphabétique.</p>
             <div class="exercice-sandbox">
-                
+                <?php
+                    $styles = [];
+                    foreach ($series as $serie) {
+                        foreach ($serie["styles"] as $style) {
+                            $styles[] = $style;
+                        }
+                    }
+
+                    // ---------------
+
+                    $styles = array_unique(array_merge(...array_map(fn($s) => $s["styles"], $series)));
+
+                    sort($styles);
+
+                    echo getHtmlFromArray($styles);
+
+                ?>
+            </div>
+        </section>
+
+        <section class="exercice">
+            <h2 class="exercice-ttl">Paramètre par valeur ou par référence</h2>
+            <p class="exercice-txt">Passage d'un paramètre par valeur</p>
+            <div class="exercice-sandbox">
+                <?php
+
+                $a = 5;
+
+                function myFuncVal(int $x) :void {
+                    $x += 2;
+                }
+
+                myFuncVal($a);
+
+                var_dump($a);
+                ?>
+            </div>
+            <p class="exercice-txt">Passage d'un paramètre par référence</p>
+            <div class="exercice-sandbox">
+                <?php
+
+                $a = 5;
+
+                function myFuncRef(int &$x) :void {
+                    $x += 2;
+                }
+
+                myFuncRef($a);
+
+                var_dump($a);
+                ?>
             </div>
         </section>
 
