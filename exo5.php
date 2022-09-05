@@ -4,11 +4,54 @@
  * Gives the HTML list from the given array. 
  *
  * @param array $array
+ * @param string|null $classUl
+ * @param string|null $classLi
  * @return string
  */
-function getHtmlFromArray(array $array) :string {
-    $valueToLi = fn($v) => "<li>$v</li>";
-    return "<ul>".implode("", array_map($valueToLi, $array))."</ul>";
+function getHtmlFromArray(array $array, string $classUl = null, string $classLi = null) :string {
+    if ($classUl) $classUl = " class=\"$classUl\"";
+    if ($classLi) $classLi = " class=\"$classLi\"";
+    $valueToLi = fn($v) => "<li$classLi>$v</li>";
+    return "<ul$classUl>".implode("", array_map($valueToLi, $array))."</ul>";
+}
+
+/**
+ * Returns serie URL from id
+ *
+ * @param integer $idSerie
+ * @return string
+ */
+function getSerieURL(int $idSerie) :string {
+    return "?serie=$idSerie";
+}
+
+/**
+ * Returns Html to display a title
+ *
+ * @param integer $level 
+ * @param string $content
+ * @param string|null $classCss
+ * @return string
+ */
+function getHtmlTitle(int $level, string $content, string $classCss = null):string {
+    $classCss = $classCss ? " class=\"$classCss\"" : "";
+    return "<h${level}${classCss}>$content</h$level>";
+}
+
+/**
+ * returns a Html code for the given serie
+ *
+ * @param array $serie
+ * @return string
+ */
+function getHtmlSerie(array $serie):string {
+    $html = "<a href=\"".getSerieURL($serie["id"])."\"><img src=\"".$serie["image"]."\" class=\"serie-img\"></a>";
+    $html .= getHtmlTitle(2, "<a class=\"serie-lnk\" href=\"".getSerieURL($serie["id"])."\">".$serie["name"]."</a>", "serie-ttl");
+    $html .= getHtmlTitle(3, "Créée par :");
+    $html .= getHtmlFromArray($serie["createdBy"], "text-list", "text-list-item");
+    $html .= getHtmlTitle(3, "Acteurs :");
+    $html .= getHtmlFromArray($serie["actors"], "text-list", "text-list-item");
+    return $html;
 }
 
 ?>
@@ -146,22 +189,7 @@ try {
             <p class="exercice-txt">L'image et le titre de la série sont des liens menant à cette page avec en paramètre "serie", l'identifiant de la série</p>
             <p class="exercice-txt">Afficher une seule série par ligne sur les plus petits écrans, 2 séries par ligne sur les écrans intermédiaires et 4 séries par ligne sur un écran d'ordinateur.</p>
             <div class="exercice-sandbox">
-                <ul>
-                <?php
-
-                foreach ($series as $serie) {
-                    echo "<li>";
-                    echo "<a href=\"?serie=".$serie["id"]."\"><img src=\"".$serie["image"]."\"></a>";
-                    echo "<h2><a href=\"?serie=".$serie["id"]."\">".$serie["name"]."</a></h2>";
-                    echo "<h3>Créée par :</h3>";
-                    echo getHtmlFromArray($serie["createdBy"]);
-                    echo "<h3>Acteurs :</h3>";
-                    echo getHtmlFromArray($serie["actors"]);
-                    echo "</li>";
-                }
-                
-                ?>
-                </ul>
+                <?=getHtmlFromArray(array_map("getHtmlSerie", $series), "series", "serie")?>
             </div>
         </section>
 
