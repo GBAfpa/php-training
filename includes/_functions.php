@@ -41,15 +41,30 @@ function getHtmlTitle(int $level, string $content, string $classCss = null): str
 }
 
 /**
- * returns a Html code for the given serie
+ * Returns Html for a link
+ *
+ * @param string $href              target page URL
+ * @param string $content           the text to display
+ * @param string|null $classCss     CSS class to add
+ * @return string
+ */
+function getHtmlLink(string $href, string $content, string $classCss = null):string {
+    if ($classCss) $classCss = " class=\"$classCss\"";
+    return "<a href=\"$href\"$classCss>$content</a>";
+}
+
+/**
+ * Returns a Html code for the given serie
  *
  * @param array $serie
  * @return string
  */
 function getHtmlSerie(array $serie, bool $isFull = false): string
 {
-    $html = "<a href=\"" . getSerieURL($serie["id"]) . "\"><img src=\"" . $serie["image"] . "\" class=\"serie-img\"></a>";
-    $html .= getHtmlTitle(2, "<a class=\"serie-lnk\" href=\"" . getSerieURL($serie["id"]) . "\">" . $serie["name"] . "</a>", "serie-ttl");
+    $url = getSerieURL($serie["id"]);
+
+    $html = getHtmlLink($url, "<img src=\"" . $serie["image"] . "\" class=\"serie-img\">");
+    $html .= getHtmlTitle(2, getHtmlLink($url, $serie["name"], "serie-lnk"), "serie-ttl");
     $html .= getHtmlTitle(3, "Créée par :");
     $html .= getHtmlFromArray($serie["createdBy"], "text-list", "text-list-item");
     $html .= getHtmlTitle(3, "Acteurs :");
@@ -65,6 +80,19 @@ function getHtmlSerie(array $serie, bool $isFull = false): string
 }
 
 /**
+ * Returns the navigation link for a page
+ *
+ * @param array $page
+ * @param integer $currentPage
+ * @return string
+ */
+function getNavLink(array $page, int $currentPage = 1):string {
+    $class = "main-nav-link";
+    if ($currentPage === $page["pageNumber"]) $class .= " active";
+    return getHtmlLink($page["href"], $page["pageTitle"], $class);
+}
+
+/**
  * Returns main navigation HTML 
  *
  * @param array $pages Pages list
@@ -72,12 +100,14 @@ function getHtmlSerie(array $serie, bool $isFull = false): string
  * @return string
  */
 function getMainNavigation(array $pages, int $currentPage = 1):string {
-    $html = "";
-    foreach($pages as $page) {
-        $html .= "<li><a class=\"main-nav-link".($currentPage === $page["pageNumber"] ? ' active' : '')."\" href=\"".$page["href"]."\">".$page["pageTitle"]."</a></li>";
-    }
+    // $html = "";
+    // foreach($pages as $page) {
+    //     $class = "main-nav-link";
+    //     if ($currentPage === $page["pageNumber"]) $class .= " active";
+    //     $html .= "<li>".getHtmlLink($page["href"], $page["pageTitle"], $class)."</li>";
+    // }
     
-    return "<nav class=\"main-nav\"><ul class=\"main-nav-list\">".$html."</ul></nav>";
+    return "<nav class=\"main-nav\">".getHtmlFromArray(array_map(fn($p) => getNavLink($p, $currentPage), $pages), "main-nav-list")."</nav>";
 }
 
 ?>
