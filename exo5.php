@@ -22,7 +22,7 @@ function getHtmlFromArray(array $array, string $classUl = null, string $classLi 
  * @return string
  */
 function getSerieURL(int $idSerie) :string {
-    return "?serie=$idSerie";
+    return "?serie=$idSerie#question4";
 }
 
 /**
@@ -44,13 +44,20 @@ function getHtmlTitle(int $level, string $content, string $classCss = null):stri
  * @param array $serie
  * @return string
  */
-function getHtmlSerie(array $serie):string {
+function getHtmlSerie(array $serie, bool $isFull = false):string {
     $html = "<a href=\"".getSerieURL($serie["id"])."\"><img src=\"".$serie["image"]."\" class=\"serie-img\"></a>";
     $html .= getHtmlTitle(2, "<a class=\"serie-lnk\" href=\"".getSerieURL($serie["id"])."\">".$serie["name"]."</a>", "serie-ttl");
     $html .= getHtmlTitle(3, "Créée par :");
     $html .= getHtmlFromArray($serie["createdBy"], "text-list", "text-list-item");
     $html .= getHtmlTitle(3, "Acteurs :");
     $html .= getHtmlFromArray($serie["actors"], "text-list", "text-list-item");
+    if($isFull) {
+        $html .=  getHtmlTitle(3, "Pays: ")."<p>".$serie["country"]."</p>";
+        $html .=  getHtmlTitle(3, "Année: ")."<p>".$serie["launchYear"]."</p>";
+        $html .=  getHtmlTitle(3, "Plateforme: ")."<p>".$serie["availableOn"]."</p>";
+        $html .= getHtmlTitle(3, "Styles :");
+        $html .= getHtmlFromArray($serie["styles"], "text-list", "text-list-item");
+    }
     return $html;
 }
 
@@ -195,12 +202,44 @@ try {
 
 
         <!-- QUESTION 4 -->
-        <section id="question5" class="exercice">
+        <section id="question4" class="exercice">
             <h2 class="exercice-ttl">Question 4</h2>
             <p class="exercice-txt">Si l'URL de la page appelée comporte l'identifiant d'une série, alors afficher toutes les informations de la série.</p>
             <p class="exercice-txt">Si l'identifiant ne correspond à aucune série, afficher un message d'erreur.</p>
             <div class="exercice-sandbox">
+            <?php
+            $isFound = false;
+            if (isset($_GET["serie"])) {
+                foreach ($series as $serie) {
+                    if ($_GET["serie"] == $serie["id"]) {
+                        echo getHtmlSerie($serie, true);
+                        $isFound = true;
+                    }
+                }
+                if(!$isFound){
+                    echo "La série demandée est indisponible!";
+                }
+
+
+                // if ($s = getSerieFromId($_GET["serie"])) echo getHtmlSerie($s, true);
+                // else echo "La série demandée est indisponible!";
+            }
+
+            /**
+             * Get serie data from an id
+             *
+             * @param integer $idSerie
+             * @return array|null
+             */
+            function getSerieFromId(int $idSerie):?array {
+                global $series;
+                $r = array_filter($series, fn($s) => $idSerie == $s["id"]);
+                if (sizeof($r) === 0) return null;
+                return array_pop($r);
+            }
+
                 
+            ?>
             </div>
         </section>
 
